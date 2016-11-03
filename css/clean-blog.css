@@ -4,6 +4,25 @@
  * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
  */
 
+#loginCancel {
+  margin-right: 20px;
+}
+
+.joinFormDiv, .modal-footer {
+  width: 60%;
+  margin: auto auto;
+  text-align: center;
+}
+
+.joinFormDiv > h5 {
+  text-align: left;
+}
+
+.addBookDiv {
+  margin: auto auto;
+  width: 1000px;
+}
+
 .detailTable {
   background-color: #373a3c;
   color: #eceeef;
@@ -377,8 +396,24 @@ form .row:first-child .floating-label-form-group {
   font-size: 14px;
   font-weight: 800;
   letter-spacing: 1px;
-  border-radius: 0;
-  padding: 15px 25px;
+  border-radius: 4px;
+  padding: 6px 12px;
+
+  display: inline-block;
+  margin-bottom: 0;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
 }
 .btn-lg {
   font-size: 16px;

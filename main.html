@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Clean Blog</title>
+    <title>Sunny Book Site</title>
 
     <!-- jQuery CDN (Bootstrap보다 먼저 위치해야 한다.) -->
     <script
@@ -17,9 +17,13 @@
             integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
             crossorigin="anonymous"></script>
 
-    <!-- Bootstrap CDN -->
+    <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
     <!-- Theme CSS -->
@@ -53,12 +57,18 @@
                 <span class="sr-only">Toggle navigation</span>
                 Menu <i class="fa fa-bars"></i>
             </button>
-            <a class="navbar-brand" href="index.html">도서 관리 프로젝트</a>
+            <a class="navbar-brand" href="main.html">도서 관리 프로젝트</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a id="goJoin" data-target="#joinmodal" data-toggle="modal">Join</a>
+                </li>
+                <li>
+                    <a id="goLogin" data-target="#loginmodal" data-toggle="modal">Login</a>
+                </li>
                 <li>
                     <a id="goAddBook" href="#">Add</a>
                 </li>
@@ -99,8 +109,71 @@
     <div class="row">
         <div class="myContent">
             <div class="post-preview">
-                <div id="addBookDiv" class="post-preview">
 
+                <div id="addBookDiv" class="post-preview">
+                    <h2 style="margin-top: 30px;" class="post-title">Add Book Page</h2><hr>
+                    <h5 style="color: #c9302c">*는 필수 입력 항목입니다.</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped myTable">
+                            <tbody>
+                            <tr>
+                                <th><h5 style="color: #c9302c">ISBN*</h5></th>
+                                <td><input id="newIsbn" type="text"></td>
+                            </tr>
+                            <tr>
+                                <th><h5 style="color: #c9302c">TITLE*</h5></th>
+                                <td><input id="newTitle" type="text"></td>
+                            </tr>
+                            <tr>
+                                <th>DATE</th>
+                                <td><input id="newDate" type="text"></td>
+                            </tr>
+                            <tr>
+                                <th>PAGE</th>
+                                <td><input id="newPage" type="text"></td>
+                            </tr>
+                            <tr>
+                                <th><h5 style="color: #c9302c">PRICE*</h5></th>
+                                <td><input id="newPrice" type="text"></td>
+                            </tr>
+                            <tr>
+                                <th><h5 style="color: #c9302c">AUTHOR*</h5></th>
+                                <td><input id="newAuthor" type="text"></td>
+                            </tr>
+                            <tr>
+                                <th>TRANSLATOR</th>
+                                <td><input id="newTranslator" type= "text"></td>
+                            </tr>
+                            <tr>
+                                <th>SUPPLEMENT</th>
+                                <td><input id="newSupp" type="text"></td>
+                            </tr>
+                            <tr>
+                                <th>PUBLISHER</th>
+                                <td><input id="newPublisher" type="text"></td>
+                            </tr>
+                            <tr>
+                                <th>IMG URL</th>
+                                <td><input id="newImgurl" type="text"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <div id="bookImgDiv" style="height: 300px;">
+                                        <h5>이미지를 끌어붙여주세요!</h5>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <button id="addBookBtn" class="btn">ADD</button>
+                                    <button id="addBookCancelBtn" class="btn" style="margin-left: 20px;">CANCEL</button>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr>
                 </div>
             </div>
 
@@ -114,7 +187,8 @@
                     </h3>
                 </a>
                 <p class="post-meta">Posted by <a href="#">Book System</a> on November 1, 2016</p>
-                <div class="table-responsive">
+
+                <div id="bookListDiv" class="table-responsive">
                     <table class="table table-striped myTable">
                         <thead>
                         <tr>
@@ -135,15 +209,74 @@
                 </div>
             </div>
             <hr>
+
             <div class="post-preview">
-                <a href="#">
-                    <h2 class="post-title">
-                        I believe every human has a finite number of heartbeats. I don't intend to waste any of mine.
-                    </h2>
-                </a>
-                <p class="post-meta">Posted by <a href="#">Start Bootstrap</a> on September 18, 2014</p>
+
+                <div id="joinmodal" class="modal fade" >
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <!-- header -->
+                            <div class="modal-header">
+                                <!-- 닫기(x) 버튼 -->
+                                <button type="button" class="close" data-dismiss="modal">×</button>
+                                <!-- header title -->
+                                <h2 class="modal-title">Join Page</h2>
+                            </div>
+                            <!-- body -->
+                            <div class="modal-body">
+                                <div class="joinFormDiv">
+                                    <h5>USER ID</h5>
+                                    <input id="joinId" type="text" /><br>
+                                    <h5>USER PASSWORD</h5>
+                                    <input id="joinPw" type="password" /><br>
+                                    <h5>USER PASSWORD CHECK</h5>
+                                    <input id="joinPw2" type="password" /><br>
+                                    <h5>USER NAME</h5>
+                                    <input id="joinName" type="text" />
+                                </div>
+                            </div>
+                            <!-- Footer -->
+                            <div class="modal-footer">
+                                <button id="dbJoinBtn" class="btn btn-warning" data-dismiss="modal">Join</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <hr>
+
+            <div class="post-preview">
+
+                <div id="loginmodal" class="modal fade" >
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <!-- header -->
+                            <div class="modal-header">
+                                <!-- 닫기(x) 버튼 -->
+                                <button type="button" class="close" data-dismiss="modal">×</button>
+                                <!-- header title -->
+                                <h2 class="modal-title">Login</h2>
+                            </div>
+                            <!-- body -->
+                            <div class="modal-body">
+                                <div class="joinFormDiv">
+                                    <h5>USER ID</h5>
+                                    <input id="loginid" type="text" /><br>
+                                    <h5>USER PASSWORD</h5>
+                                    <input id="loginpw" type="password" /><br>
+                                </div>
+                            </div>
+                            <!-- Footer -->
+                            <div class="modal-footer">
+                                <button id="loginCancel" class="btn" data-dismiss="modal">Cancel</button>
+                                <button id="loginBtn" class="btn btn-warning" data-dismiss="modal">Login</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+
             <!-- Pager -->
             <ul class="pager">
                 <li class="next">

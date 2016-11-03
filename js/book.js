@@ -2,7 +2,7 @@
 function searchBook() {
     if(event.keyCode == 13){
 
-        alert("d????");
+        $("#bookListDiv").show();
 
         $.ajax({
             url: "http://localhost:7070/book/bookList",
@@ -25,9 +25,7 @@ function searchBook() {
                     var deleteTag = $("<a></a>").attr("class", "remove");
                     var iTag = $("<i></i>").attr("class", "glyphicon glyphicon-remove");
                     deleteTag.append(iTag);
-                    deleteTag.on("click", function () {
-                        $(this).parent().parent().remove();
-                    });
+                    deleteTag.on("click", bookDelete);
                     var deleteBtnTd = $("<td></td>").append(deleteTag);
 
                     var updateTag = $("<a></a>").attr("class", "update");
@@ -174,6 +172,29 @@ function bookInfoUpdate() {
   //  $(this).parent().parent().find("[type=button]").attr("disabled", "disabled");
 }
 
+function bookDelete() {
+    var isbn = $(this).parent().parent().attr("data-isbn");
+    var thisTd = $(this).parent().parent();
+
+    $.ajax({
+        url : "http://localhost:7070/book/bookDelete",
+        type : "GET",
+        dataType : "jsonp",
+        jsonp : "callback",
+        data : {
+            isbn : isbn
+        },
+        success : function (result) {
+            console.log("Book Delete Result: " + result);
+            thisTd.remove();
+        },
+        error : function () {
+            alert("bookDelete Error!!");
+        }
+    })
+
+}
+
 function bookDetail() {
 
     var isbn = $(this).parent().parent().attr("data-isbn");
@@ -225,106 +246,132 @@ function bookShare() {
 
 $(document).ready(function () {
 
+    $("#addBookDiv").hide();
+    $("#bookListDiv").hide();
+
     $("#goAddBook").on("click", function () {
 
-        var addInfo = $("<h2>Add Books!</h2>").attr("class", "post-title");
+        $("#addBookDiv").slideToggle("slow", function () {
+            $("#addBookBtn").on("click", addBookClick);
+            $("#addBookCancelBtn").on("click", function () {
+                $("#newIsbn").val("");
+                $("#newTitle").val("");
+                $("#newDate").val("");
+                $("#newPage").val("");
+                $("#newPrice").val("");
+                $("#newPrice").val("");
+                $("#newPrice").val("");
+                $("#newSupp").val("");
+                $("#newPrice").val("");
+                $("#newPrice").val("");
 
-        var addDiv = $("<div></div>").attr("class", "table-responsive");
-        var addTable = $("<table></table>").attr("class", "table table-striped myTable");
-        var addTbody = $("<tbody></tbody>");
-
-        var bisbn = $("<th></th>").text("ISBN");
-        var data1 = $("<input />").attr("type", "text").attr("id", "newIsbn");
-        var td1 = $("<td></td>").append(data1);
-        var tr1 = $("<tr></tr>");
-        tr1.append(bisbn);
-        tr1.append(td1);
-
-        var btitle = $("<th></th>").text("TITLE");
-        var data2 = $("<input />").attr("type", "text").attr("id", "newTitle");
-        var td2 = $("<td></td>").append(data2);
-        var tr2 = $("<tr></tr>");
-        tr2.append(btitle);
-        tr2.append(td2);
-
-        var bdate = $("<th></th>").text("DATE");
-        var data3 = $("<input />").attr("type", "text").attr("id", "newDate");
-        var td3 = $("<td></td>").append(data3);
-        var tr3 = $("<tr></tr>");
-        tr3.append(bdate);
-        tr3.append(td3);
-
-        var bpage = $("<th></th>").text("PAGE");
-        var data4 = $("<input />").attr("type", "text").attr("id", "newPage");
-        var td4 = $("<td></td>").append(data4);
-        var tr4 = $("<tr></tr>");
-        tr4.append(bpage);
-        tr4.append(td4);
-
-        var bprice = $("<th></th>").text("PRICE");
-        var data5 = $("<input />").attr("type", "text").attr("id", "newPrice");
-        var td5 = $("<td></td>").append(data5);
-        var tr5 = $("<tr></tr>");
-        tr5.append(bprice);
-        tr5.append(td5);
-
-        var bauthor = $("<th></th>").text("AUTHOR");
-        var data6 = $("<input />").attr("type", "text").attr("id", "newAuthor");
-        var td6 = $("<td></td>").append(data6);
-        var tr6 = $("<tr></tr>");
-        tr6.append(bauthor);
-        tr6.append(td6);
-
-        var btranslator = $("<th></th>").text("TRANSLATOR");
-        var data7 = $("<input />").attr("type", "text").attr("id", "newTranslator");
-        var td7 = $("<td></td>").append(data7);
-        var tr7 = $("<tr></tr>");
-        tr7.append(btranslator);
-        tr7.append(td7);
-
-        var bpublisher = $("<th></th>").text("PUBLISHER");
-        var data8 = $("<input />").attr("type", "text").attr("id", "newPublisher");
-        var td8 = $("<td></td>").append(data8);
-        var tr8 = $("<tr></tr>");
-        tr8.append(bpublisher);
-        tr8.append(td8);
-
-        var bimgurl = $("<th></th>").text("IMG URL");
-        var data9 = $("<input />").attr("type", "text").attr("id", "newImgurl");
-        var td9 = $("<td></td>").append(data9);
-        var tr9 = $("<tr></tr>");
-        tr9.append(bimgurl);
-        tr9.append(td9);
-
-        var sendBtn = $("<button>ADD</button>").attr("class", "btn");
-        sendBtn.on("click", addBookClick);
-        var td10 = $("<td></td>").attr("colspan", "2").append(sendBtn);
-        td10.append($("<button>Cancel</button>").attr("class", "btn"));
-        var tr10 = $("<tr></tr>").append(td10);
-
-        addTbody.append(tr1);
-        addTbody.append(tr2);
-        addTbody.append(tr3);
-        addTbody.append(tr4);
-        addTbody.append(tr5);
-        addTbody.append(tr6);
-        addTbody.append(tr7);
-        addTbody.append(tr8);
-        addTbody.append(tr9);
-        addTbody.append(tr10);
-        addTable.append(addTbody);
-        addDiv.append(addTable);
-        addDiv.append($("<hr>"));
+                $("#addBookDiv").hide();
+            });
+        });
 
 
-        $("#addBookDiv").append(addInfo);
-        $("#addBookDiv").append(addDiv);
+    });
+
+
+    $("#dbJoinBtn").on("click", function () {
+        alert("join!");
+
+        var id = $("#joinId").val();
+        var pw = $("#joinPw").val();
+        var name = $("#joinName").val();
+
+        $.ajax({
+            url: "http://localhost:7070/book/join",
+            type: "get",
+            dataType: "jsonp",
+            jsonp: "callback",
+            data: {
+                id : id,
+                pw : pw,
+                name : name
+            },
+            success: function (result) {
+
+                if(result == true){
+                    alert("회원가입 완료!");
+                } else{
+                    alert("회원가입을 다시 진행해주세요!");
+                }
+            },
+            error: function () {
+
+            }
+        });
+    });
+
+    $("#goLogin").on("click", function () {
+
+        if ($("#goLogin").text().trim() == "Logout") {
+
+            alert("로그아웃 성공!");
+            loginTextClear();
+            $("#goLogin").text("Login");
+            $("#goLogin").attr("data-target", "#loginmodal");
+            $("#goJoin").show();
+            sessionStorage.clear();
+
+        }
+
+    });
+
+    $("#loginCancel").on("click", loginTextClear);
+
+    $("#loginBtn").on("click", function () {
+
+        var id = $("#loginid").val().trim();
+        var pw = $("#loginpw").val().trim();
+
+        if(id == "" || pw == ""){
+            alert("ID 혹은 PW을 입력하세요.");
+        } else{
+            $.ajax({
+                url: "http://localhost:7070/book/login",
+                type: "get",
+                dataType: "jsonp",
+                jsonp: "callback",
+                data: {
+                    id : id,
+                    pw : pw
+                },
+                success: function (result) {
+
+                    if(result = true){
+                        alert("로그인 성공!");
+                        $("#goLogin").text("Logout");
+                        $("#goLogin").attr("data-target", "");
+                        $("#goJoin").hide();
+
+                        sessionStorage.id = id;
+                        sessionStorage.pw = pw;
+                    } else{
+                        alert("로그인 실패!");
+                    }
+                },
+                error: function () {
+
+                }
+            });
+        }
+
+        loginTextClear();
+
     });
 
 })
 
+function loginTextClear() {
+    $("#loginid").val("");
+    $("#loginpw").val("");
+}
+
 function addBookClick() {
-    alert("add!!");
+
+    alert("추가할꺼야!");
 
     var thisTd = $(this).parent().parent().parent().html();
     console.log(thisTd);
@@ -336,6 +383,7 @@ function addBookClick() {
     var newPrice = $("#newPrice").val();
     var newAuthor = $("#newPrice").val();
     var newTranslator = $("#newPrice").val();
+    var newSupp = $("#newSupp").val();
     var newPublisher = $("#newPrice").val();
     var newImgurl = $("#newPrice").val();
 
@@ -352,6 +400,7 @@ function addBookClick() {
             price: newPrice,
             author : newAuthor,
             trans : newTranslator,
+            sup : newSupp,
             pub : newPublisher,
             img : newImgurl
         },
