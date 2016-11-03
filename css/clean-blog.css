@@ -4,6 +4,19 @@
  * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
  */
 
+.detailTable {
+  background-color: #373a3c;
+  color: #eceeef;
+  width: 100%;
+  margin: 15px auto;
+  padding: 30px;
+}
+
+.myContent {
+  width: 90%;
+  margin: 0 auto;
+}
+
 .myTable {
   overflow: scroll;
   font-size: 14px;
@@ -16,8 +29,18 @@
   font-size: 20px;
 }
 
+td > input {
+  width: 100%;
+}
+
 i {
-  color:#F05F40;
+  color: lightcoral;
+  font-size: 20px;
+}
+
+i:hover {
+  color: tomato;
+  font-size: 25px;
 }
 
 
@@ -334,7 +357,7 @@ footer .copyright {
   -ms-transition: top 0.3s ease,opacity 0.3s ease;
   transition: top 0.3s ease,opacity 0.3s ease;
 }
-.floating-label-form-group::not(:first-child) {
+.floating-label-form-group:not(:first-child) {
   padding-left: 14px;
   border-left: 1px solid #eeeeee;
 }

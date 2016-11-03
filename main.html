@@ -60,13 +60,13 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href="index.html">Add</a>
+                    <a id="goAddBook" href="#">Add</a>
                 </li>
                 <li>
-                    <a href="about.html">Share Books</a>
+                    <a href="#">Share Books</a>
                 </li>
                 <li>
-                    <a href="post.html">Book Review</a>
+                    <a href="#">Book Review</a>
                 </li>
             </ul>
         </div>
@@ -97,9 +97,15 @@
 <!-- Main Content -->
 <div class="container">
     <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="myContent">
             <div class="post-preview">
-                <a href="post.html">
+                <div id="addBookDiv" class="post-preview">
+
+                </div>
+            </div>
+
+            <div class="post-preview">
+                <a href="#">
                     <h2 class="post-title">
                         Man must explore, and this is exploration at its greatest
                     </h2>
@@ -118,6 +124,8 @@
                             <th><a href="#" onclick="mySort()">Price</a></th>
                             <th>Delete</th>
                             <th>Update</th>
+                            <th>Detail</th>
+                            <th>Share</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -128,7 +136,7 @@
             </div>
             <hr>
             <div class="post-preview">
-                <a href="post.html">
+                <a href="#">
                     <h2 class="post-title">
                         I believe every human has a finite number of heartbeats. I don't intend to waste any of mine.
                     </h2>
