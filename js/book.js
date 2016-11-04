@@ -1,8 +1,16 @@
+var bookCount;
+var reviewCount;
+var imgFileId;
+var imgURL;
 
 function searchBook() {
     if(event.keyCode == 13){
 
         $("#bookListDiv").show();
+        var offset = $("#bookListDiv").offset();
+        $("html, body").animate({scrollTop: offset.top}, 400);
+
+        $(".todayP").text("Searched on " + new Date().toLocaleString());
 
         $.ajax({
             url: "http://localhost:7070/book/bookList",
@@ -14,12 +22,28 @@ function searchBook() {
             },
             success: function (result) {
 
+                $("#bookTable").empty();
+
+                bookCount = result.length;
+                if(bookCount != 0){
+                    $("#bookFindResult").text(bookCount + " Books searched about \"" + $("#keyword").val() + "\"");
+                }
+
                 for(var i=0; i < result.length; i++){
                     var tr = $("<tr></tr>").attr("data-isbn", result[i].isbn);
 
                     var imgUrl = $("<img>").attr("src", result[i].img);
                     var imgTd = $("<td></td>").append(imgUrl);
+
                     var titleTd = $("<td></td>").text(result[i].title);
+
+                    var detailTag = $("<a></a>").attr("class", "detail");
+                    var iTag3 = $("<i></i>").attr("class", "glyphicon glyphicon-zoom-in");
+                    detailTag.append(iTag3);
+                    detailTag.on("click", bookDetail);
+                    titleTd.append($("<br>"));
+                    titleTd.append(detailTag);
+
                     var authorTd = $("<td></td>").text(result[i].author);
                     var priceTd = $("<td></td>").text(result[i].price);
                     var deleteTag = $("<a></a>").attr("class", "remove");
@@ -29,16 +53,18 @@ function searchBook() {
                     var deleteBtnTd = $("<td></td>").append(deleteTag);
 
                     var updateTag = $("<a></a>").attr("class", "update");
-                    var iTag2 = $("<i></i>").attr("class", "glyphicon glyphicon-pencil");
+                    var iTag2 = $("<i></i>").attr("class", "glyphicon glyphicon-cog");
                     updateTag.append(iTag2);
                     updateTag.on("click", bookInfoUpdate);
                     var updateBtnTd = $("<td></td>").append(updateTag);
 
-                    var detailTag = $("<a></a>").attr("class", "detail");
-                    var iTag3 = $("<i></i>").attr("class", "glyphicon glyphicon-zoom-in");
-                    detailTag.append(iTag3);
-                    detailTag.on("click", bookDetail);
-                    var detailBtnTd = $("<td></td>").append(detailTag);
+                    var reviewTag = $("<a></a>").attr("class", "review");
+                    reviewTag.attr("data-target", "#reviewmodal");
+                    reviewTag.attr("data-toggle", "modal");
+                    var iTag5 = $("<i></i>").attr("class", "glyphicon glyphicon-pencil");
+                    reviewTag.append(iTag5);
+                    reviewTag.on("click", bookReview);
+                    var reviewBtnTd = $("<td></td>").append(reviewTag);
 
                     var shareTag = $("<a></a>").attr("class", "share");
                     var iTag4 = $("<i></i>").attr("class", "glyphicon glyphicon-heart");
@@ -52,10 +78,10 @@ function searchBook() {
                     tr.append(priceTd);
                     tr.append(deleteBtnTd);
                     tr.append(updateBtnTd);
-                    tr.append(detailBtnTd);
+                    tr.append(reviewBtnTd);
                     tr.append(shareBtnTd);
 
-                    $("tbody").append(tr);
+                    $("#bookTable").append(tr);
                 }
 
 
@@ -112,7 +138,7 @@ function bookInfoUpdate() {
 
     $(".remove").css("visibility", "hidden");
     $(".update").css("visibility", "hidden");
-    $(".detail").css("visibility", "hidden");
+    $(".review").css("visibility", "hidden");
     $(".share").css("visibility", "hidden");
 
 
@@ -158,7 +184,7 @@ function bookInfoUpdate() {
 
                 $(".remove").css("visibility", "visible");
                 $(".update").css("visibility", "visible");
-                $(".detail").css("visibility", "visible");
+                $(".review").css("visibility", "visible");
                 $(".share").css("visibility", "visible");
                 $(".updateFinish").remove();
             },
@@ -170,6 +196,15 @@ function bookInfoUpdate() {
     });
 
   //  $(this).parent().parent().find("[type=button]").attr("disabled", "disabled");
+}
+
+function bookReview() {
+    var isbn = $(this).parent().parent().attr("data-isbn");
+    $("#reviewIsbn").attr("value", isbn);
+
+    var title = $(this).parent().parent().find("td:nth-child(2)").text();
+    $("#reviewTitle").text(title);
+
 }
 
 function bookDelete() {
@@ -187,11 +222,12 @@ function bookDelete() {
         success : function (result) {
             console.log("Book Delete Result: " + result);
             thisTd.remove();
+            $("#bookFindResult").text(--bookCount + " Books searched about \"" + $("#keyword").val() + "\"");
         },
         error : function () {
             alert("bookDelete Error!!");
         }
-    })
+    });
 
 }
 
@@ -199,7 +235,7 @@ function bookDetail() {
 
     var isbn = $(this).parent().parent().attr("data-isbn");
     var thisTd = $(this).parent().parent().find("td:nth-child(2)");
-    var detailATd = $(this).parent().parent().find("td:nth-child(7) > a");
+    var detailATd = $(this).parent().parent().find("td:nth-child(2) > a");
 
     $.ajax({
         url : "http://localhost:7070/book/bookDetail",
@@ -210,23 +246,27 @@ function bookDetail() {
             isbn : isbn
         },
         success : function (result) {
-            var tableT = $("<table></table>").attr("class", "detailTable");
-            var tableBody = $("<tbody></tbody>");
 
-            var dateTd = $("<tr></tr>").append("<td></td>").text("발행일: " + result.date);
-            tableBody.append(dateTd);
+            var detailDiv = $("<div></div>").attr("class", "detailDiv");
 
-            var pageTd = $("<tr></tr>").append("<td></td>").text("페이지: " + result.page);
-            tableBody.append(pageTd);
+            var dateTd = $("<h6></h6>").text("발행일: " + result.date);
+            var pageTd = $("<h6></h6>").text("페이지: " + result.page);
+            var supTd = $("<h6></h6>").text("부록: " + result.supplement);
+            var pubTd = $("<h6></h6>").text("페이지: " + result.publisher);
 
-            var supTd = $("<tr></tr>").append("<td></td>").text("부록: " + result.supplement);
-            tableBody.append(supTd);
+            var closeBtn = $("<input>").attr("type", "button").attr("class", "btn").val("CLOSE");
+            closeBtn.on("click", function () {
+                $(this).parent().remove();
+                detailATd.css("visibility", "visible");
+            });
 
-            var pubTd = $("<tr></tr>").append("<td></td>").text("페이지: " + result.publisher);
-            tableBody.append(pubTd);
+            detailDiv.append(dateTd);
+            detailDiv.append(pageTd);
+            detailDiv.append(supTd);
+            detailDiv.append(pubTd);
+            detailDiv.append(closeBtn);
 
-            tableT.append(tableBody);
-            thisTd.append(tableT);
+            thisTd.append(detailDiv);
 
             detailATd.css("visibility", "hidden");
 
@@ -240,7 +280,173 @@ function bookDetail() {
 
 function bookShare() {
 
-    var isbn = $(this).parent().parent().attr("data-isbn");
+    if(sessionStorage.loginStatus != null){
+
+        var isbn = $(this).parent().parent().attr("data-isbn");
+    }
+
+}
+
+// 키워드로 서평찾기
+function searchReview() {
+
+    if(event.keyCode == 13){
+        $(".todayP").text("Searched on " + new Date().toLocaleString());
+
+        $.ajax({
+            url: "http://localhost:7070/book/showReviewByKeyword",
+            type: "get",
+            dataType: "jsonp",
+            jsonp: "callback",
+            data: {
+                keyword : $("#reviewSearchKey").val()
+            },
+            success: function (result) {
+
+                $("#reviewTable").empty();
+
+                reviewCount = result.length;
+                if(reviewCount != 0){
+                    $("#reviewFindResult").text(reviewCount + " Comments about " + result[0].title);
+                }
+
+                for(var i=0; i < result.length; i++){
+                    var tr = $("<tr></tr>").attr("data-isbn", result[i].isbn);
+
+                    var titleTd = $("<td></td>").text(result[i].title);
+                    var comTd = $("<td></td>").text(result[i].comments);
+                    var idTd = $("<td></td>").text(result[i].id);
+                    var dateTd = $("<td></td>").text(result[i].date);
+
+                    var deleteTag = $("<a></a>").attr("class", "remove");
+                    var iTag = $("<i></i>").attr("class", "glyphicon glyphicon-remove");
+                    deleteTag.append(iTag);
+                    deleteTag.on("click", deleteReview);
+                    var deleteBtnTd = $("<td></td>").append(deleteTag);
+
+                    tr.append(titleTd);
+                    tr.append(comTd);
+                    tr.append(idTd);
+                    tr.append(dateTd);
+                    tr.append(deleteBtnTd);
+
+                    $("#reviewTable").append(tr);
+                }
+
+            },
+            error : function () {
+                alert("Error!!");
+            }
+        });
+    }
+}
+
+function loginTextClear() {
+    $("#loginid").val("");
+    $("#loginpw").val("");
+}
+
+// 책 추가 함수
+function addBookClick() {
+
+    var thisTd = $(this).parent().parent().parent().html();
+    console.log(thisTd);
+
+    var newIsbn = $("#newIsbn").val().trim();
+    var newTitle = $("#newTitle").val().trim();
+    var newDate = $("#newDate").val().trim();
+    var newPage = $("#newPage").val().trim();
+    var newPrice = $("#newPrice").val().trim();
+    var newAuthor = $("#newAuthor").val().trim();
+    var newTranslator = $("#newTranslator").val().trim();
+    var newSupp = $("#newSupp").val().trim();
+    var newPublisher = $("#newPublisher").val().trim();
+    var newImgurl = $("#newImgurl").val().trim();
+
+    if(newImgurl == null) imgURL = newImgurl;
+
+    alert("추가할꺼야!");
+    if(newIsbn != "" && newTitle != "" && newPrice != "" && newAuthor != "")
+
+    $.ajax({
+        url: "http://localhost:7070/book/addBook",
+        type: "GET",
+        dataType: "jsonp",
+        jsonp: "callback",
+        data : {
+            isbn : newIsbn,
+            title : newTitle,
+            date : newDate,
+            page : newPage,
+            price: newPrice,
+            author : newAuthor,
+            trans : newTranslator,
+            sup : newSupp,
+            pub : newPublisher,
+            img : imgURL
+        },
+        success : function (result) {
+
+            console.log(result);
+            if(result){
+                alert("책 추가 성공!");
+                newIsbn = "";
+                newTitle = "";
+                newDate = "";
+                newPage = "";
+                newPrice = "";
+                newAuthor = "";
+                newTranslator = "";
+                newSupp = "";
+                newPublisher = "";
+                newImgurl = "";
+                $(".addBookImg").remove();
+            }
+
+        },
+        error : function () {
+            alert("Book Add AJAX ERROR!");
+        }
+    })
+}
+
+// 서평 삭제 함수
+function deleteReview() {
+
+    if(sessionStorage.loginStatus == "login"){
+        var isbn = $(this).parent().parent().attr("data-isbn");
+        var reviewId = $(this).parent().parent().find("td:nth-child(3)").text();
+        var date = $(this).parent().parent().find("td:nth-child(4)").text();
+
+        var thisTd = $(this).parent().parent();
+
+        $.ajax({
+            url : "http://localhost:7070/book/reviewDelete",
+            type : "GET",
+            dataType : "jsonp",
+            jsonp : "callback",
+            data : {
+                isbn : isbn,
+                reviewId : reviewId,
+                date : date
+            },
+            success : function (result) {
+                if(result){
+                    console.log("Review Delete Result: " + result);
+                    thisTd.remove();
+                    $("#reviewFindResult").text(--reviewCount + " Comments about " + result[0].title);
+                } else{
+                    alert("다른 사용자의 서평은 삭제할 수 없습니다.");
+                }
+
+            },
+            error : function () {
+                alert("reviewDelete Error!!");
+            }
+        });
+    } else {
+        alert("로그인 후 이용해주세요!");
+    }
 
 }
 
@@ -248,6 +454,13 @@ $(document).ready(function () {
 
     $("#addBookDiv").hide();
     $("#bookListDiv").hide();
+    $("#reviewDiv").hide();
+
+    if(sessionStorage.loginStatus == "login"){
+        $("#goLogin").text("Logout");
+        $("#goLogin").attr("data-target", "");
+        $("#goJoin").hide();
+    }
 
     $("#goAddBook").on("click", function () {
 
@@ -259,19 +472,20 @@ $(document).ready(function () {
                 $("#newDate").val("");
                 $("#newPage").val("");
                 $("#newPrice").val("");
-                $("#newPrice").val("");
-                $("#newPrice").val("");
+                $("#newAuthor").val("");
+                $("#newTranslator").val("");
                 $("#newSupp").val("");
-                $("#newPrice").val("");
-                $("#newPrice").val("");
+                $("#newPublisher").val("");
+                $("#newImgurl").val("");
+                $(".addBookImg").remove();
 
                 $("#addBookDiv").hide();
             });
         });
 
-
+        var offset = $("#addBookDiv").offset();
+        $("html, body").animate({scrollTop: offset.top}, 400);
     });
-
 
     $("#dbJoinBtn").on("click", function () {
         alert("join!");
@@ -308,12 +522,31 @@ $(document).ready(function () {
 
         if ($("#goLogin").text().trim() == "Logout") {
 
-            alert("로그아웃 성공!");
-            loginTextClear();
-            $("#goLogin").text("Login");
-            $("#goLogin").attr("data-target", "#loginmodal");
-            $("#goJoin").show();
-            sessionStorage.clear();
+            $.ajax({
+                url: "http://localhost:7070/book/logout",
+                type: "get",
+                dataType: "jsonp",
+                jsonp: "callback",
+                data: {},
+                success: function (result) {
+
+                    if(result = true){
+                        alert("로그아웃 성공!");
+                        loginTextClear();
+                        $("#goLogin").text("Login");
+                        $("#goLogin").attr("data-target", "#loginmodal");
+                        $("#goJoin").show();
+                        sessionStorage.loginStatus = "logout";
+
+                    } else{
+                        alert("로그아웃 실패!");
+                    }
+                },
+                error: function () {
+                    alert("Logout AJAX Error!");
+                }
+            });
+
 
         }
 
@@ -329,6 +562,7 @@ $(document).ready(function () {
         if(id == "" || pw == ""){
             alert("ID 혹은 PW을 입력하세요.");
         } else{
+
             $.ajax({
                 url: "http://localhost:7070/book/login",
                 type: "get",
@@ -346,14 +580,14 @@ $(document).ready(function () {
                         $("#goLogin").attr("data-target", "");
                         $("#goJoin").hide();
 
-                        sessionStorage.id = id;
-                        sessionStorage.pw = pw;
+                        sessionStorage.loginStatus = "login";
+
                     } else{
                         alert("로그인 실패!");
                     }
                 },
                 error: function () {
-
+                    alert("Login AJAX Error!");
                 }
             });
         }
@@ -362,53 +596,146 @@ $(document).ready(function () {
 
     });
 
+    $("#goReview").on("click", function () {
+        $("#reviewDiv").show();
+        var offset = $("#reviewDiv").offset();
+        $("html, body").animate({scrollTop: offset.top}, 400);
+    });
+
+    // 서평 등록
+    $("#reviewBtn").on("click", function () {
+
+        $("#reviewDiv").show();
+
+        var isbn = $("#reviewIsbn").val();
+        alert("Review register!! " + isbn);
+        console.log($("#reviewTitle").text());
+
+        $.ajax({
+            url: "http://localhost:7070/book/review",
+            type: "get",
+            dataType: "jsonp",
+            jsonp: "callback",
+            data: {
+                isbn: isbn,
+                title: $("#reviewTitle").text(),
+                comments: $("#reviewT").val()
+            },
+            success: function (result) {
+
+                if(result == true){
+                    alert("서평 등록!");
+                } else{
+                    alert("로그인 후 이용해주세요!");
+                }
+            },
+            error: function () {
+
+            }
+        });
+
+        $("#reviewT").val("");
+
+    });
+
+    // ISBN 값으로 서평 찾기
+    $("#goReviewPage").on("click", function () {
+
+        $("#reviewDiv").show();
+
+        var offset = $("#reviewDiv").offset();
+        $("html, body").animate({scrollTop: offset.top}, 400);
+        $(".todayP").text("Searched on " + new Date().toLocaleString());
+
+        $.ajax({
+            url: "http://localhost:7070/book/showReviewByIsbn",
+            type: "get",
+            dataType: "jsonp",
+            jsonp: "callback",
+            data: {
+                isbn : $("#reviewIsbn").val()
+            },
+            success: function (result) {
+
+                reviewCount = result.length;
+                if(reviewCount != 0){
+                    $("#reviewFindResult").text(reviewCount + " Comments about " + result[0].title);
+                }
+
+                for(var i=0; i < result.length; i++){
+                    var tr = $("<tr></tr>").attr("data-isbn", result[i].isbn);
+
+                    var titleTd = $("<td></td>").text(result[i].title);
+                    var comTd = $("<td></td>").text(result[i].comments);
+                    var idTd = $("<td></td>").text(result[i].id);
+                    var dateTd = $("<td></td>").text(result[i].date);
+
+                    var deleteTag = $("<a></a>").attr("class", "remove");
+                    var iTag = $("<i></i>").attr("class", "glyphicon glyphicon-remove");
+                    deleteTag.append(iTag);
+                    deleteTag.on("click", deleteReview);
+                    var deleteBtnTd = $("<td></td>").append(deleteTag);
+
+                    tr.append(titleTd);
+                    tr.append(comTd);
+                    tr.append(idTd);
+                    tr.append(dateTd);
+                    tr.append(deleteBtnTd);
+
+                    $("#reviewTable").append(tr);
+                }
+
+            },
+            error : function () {
+                alert("Error!!");
+            }
+        });
+
+    });
+
 })
 
-function loginTextClear() {
-    $("#loginid").val("");
-    $("#loginpw").val("");
+function dStart() {
+    imgFileId = event.target.id;
 }
 
-function addBookClick() {
+function dDrop() {
 
-    alert("추가할꺼야!");
+    var newImg = new Image();   // 내용이 없는 이미지 문서객체를 생성
+    var f = event.dataTransfer.files[0];
+    var imgReader = new FileReader();
 
-    var thisTd = $(this).parent().parent().parent().html();
-    console.log(thisTd);
+    imgReader.onload = function(){
+        newImg.src = event.target.result;
+        imgURL = newImg.src;
+        document.getElementById("bookImgDiv").appendChild(newImg);
+        $("#bookImgDiv > img").attr("class", "addBookImg");
+    };
 
-    var newIsbn = $("#newIsbn").val();
-    var newTitle = $("#newTitle").val();
-    var newDate = $("#newDate").val();
-    var newPage = $("#newPage").val();
-    var newPrice = $("#newPrice").val();
-    var newAuthor = $("#newPrice").val();
-    var newTranslator = $("#newPrice").val();
-    var newSupp = $("#newSupp").val();
-    var newPublisher = $("#newPrice").val();
-    var newImgurl = $("#newPrice").val();
+    imgReader.readAsDataURL(f);
 
-    $.ajax({
-        url: "http://localhost:7070/book/addBook",
-        type: "GET",
-        dataType: "jsonp",
-        jsonp: "callback",
-        data : {
-            isbn : newIsbn,
-            title : newTitle,
-            date : newDate,
-            page : newPage,
-            price: newPrice,
-            author : newAuthor,
-            trans : newTranslator,
-            sup : newSupp,
-            pub : newPublisher,
-            img : newImgurl
-        },
-        success : function (result) {
+    event.preventDefault();
 
-        },
-        error : function () {
-
-        }
-    })
 }
+
+/*
+
+var base64 ;
+
+function fileInfo(f){
+    var file = f.files; // files 를 사용하면 파일의 정보를 알 수 있음
+
+    var reader = new FileReader(); // FileReader 객체 사용
+    reader.onload = function(rst){ // 이미지를 선택후 로딩이 완료되면 실행될 부분
+        $('#img_box').html('<img src="' + rst.target.result + '">'); // append 메소드를 사용해서 이미지 추가
+        // 이미지는 base64 문자열로 추가
+        // 이 방법을 응용하면 선택한 이미지를 미리보기 할 수 있음
+
+        base64 = rst.target.result;
+
+
+    }
+    reader.readAsDataURL(file[0]); // 파일을 읽는다, 배열이기 때문에 0 으로 접근
+}
+*/
+

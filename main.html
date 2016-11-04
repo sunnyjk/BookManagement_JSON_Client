@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
     <meta charset="utf-8">
@@ -47,7 +46,6 @@
 </head>
 
 <body>
-
 <!-- Navigation -->
 <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
     <div class="container-fluid">
@@ -73,10 +71,10 @@
                     <a id="goAddBook" href="#">Add</a>
                 </li>
                 <li>
-                    <a href="#">Share Books</a>
+                    <a id="goReview" href="#reviewPageH2">Book Review</a>
                 </li>
                 <li>
-                    <a href="#">Book Review</a>
+                    <a href="#">Share Books</a>
                 </li>
             </ul>
         </div>
@@ -87,7 +85,7 @@
 
 <!-- Page Header -->
 <!-- Set your background image for this header on the line below. -->
-<header class="intro-header" style="background-image: url('img/home-bg.jpg')">
+<header class="intro-header" style="background-image: url('img/beach.jpg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
@@ -109,7 +107,18 @@
     <div class="row">
         <div class="myContent">
             <div class="post-preview">
+                <a href="post.html">
+                    <h2 class="post-title">
+                        Failure is not an option
+                    </h2>
+                    <h3 class="post-subtitle">
+                        Many say exploration is part of our destiny, but it’s actually our duty to future generations.
+                    </h3>
+                </a>
+            </div>
 
+            <!-- Add Book DIV -->
+            <div class="post-preview">
                 <div id="addBookDiv" class="post-preview">
                     <h2 style="margin-top: 30px;" class="post-title">Add Book Page</h2><hr>
                     <h5 style="color: #c9302c">*는 필수 입력 항목입니다.</h5>
@@ -158,7 +167,10 @@
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    <div id="bookImgDiv" style="height: 300px;">
+                                    <div id="bookImgDiv" style="height:400px;"
+                                         ondragenter="return false"
+                                         ondragover="return false"
+                                         ondrop="dDrop()">
                                         <h5>이미지를 끌어붙여주세요!</h5>
                                     </div>
                                 </td>
@@ -177,18 +189,15 @@
                 </div>
             </div>
 
-            <div class="post-preview">
+            <!-- Search Book Result DIV -->
+            <div id="bookListDiv" class="post-preview">
                 <a href="#">
-                    <h2 class="post-title">
-                        Man must explore, and this is exploration at its greatest
-                    </h2>
-                    <h3 class="post-subtitle">
-                        Problems look mighty small from 150 miles up
-                    </h3>
+                    <h2 class="post-title">Book List</h2>
                 </a>
-                <p class="post-meta">Posted by <a href="#">Book System</a> on November 1, 2016</p>
-
-                <div id="bookListDiv" class="table-responsive">
+                <p class="post-meta todayP"></p>
+                <h5 id="bookFindResult"></h5>
+                <hr>
+                <div class="table-responsive">
                     <table class="table table-striped myTable">
                         <thead>
                         <tr>
@@ -198,20 +207,64 @@
                             <th><a href="#" onclick="mySort()">Price</a></th>
                             <th>Delete</th>
                             <th>Update</th>
-                            <th>Detail</th>
+                            <th>Review</th>
                             <th>Share</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="bookTable">
 
                         </tbody>
                     </table>
                 </div>
             </div>
-            <hr>
 
+            <!-- Review DIV-->
+            <div id="reviewDiv" class="post-preview">
+                <hr>
+                <a href="post.html">
+                    <h2 class="post-title">Book Review</h2>
+                    <h3 class="post-subtitle">
+                        Many say exploration is part of our destiny, but it’s actually our duty to future generations.
+                    </h3>
+                </a>
+                <div id="space1"></div>
+                <input id="reviewSearchKey" type="text" class="form-control" placeholder="Keyword Search..."
+                       onkeyup="searchReview()" style="width:500px; margin: auto auto;">
+                <br>
+                <p class="post-meta todayP"></p>
+                <h5 id="reviewFindResult"></h5>
+                <hr>
+
+                <div class="post-preview">
+                    <div class="table-responsive">
+                        <table class="table table-striped myTable">
+                            <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Comments</th>
+                                <th>ID</th>
+                                <th>Date</th>
+                                <th>Delete</th>
+                            </tr>
+                            </thead>
+                            <tbody id="reviewTable">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <hr>
+            </div>
+
+            <!-- Pager -->
+            <ul class="pager">
+                <li class="next">
+                    <a href="#">Older Posts &rarr;</a>
+                </li>
+            </ul>
+
+            <!-- Modal -->
             <div class="post-preview">
-
                 <div id="joinmodal" class="modal fade" >
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -243,10 +296,7 @@
                     </div>
                 </div>
             </div>
-            <hr>
-
             <div class="post-preview">
-
                 <div id="loginmodal" class="modal fade" >
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -275,19 +325,41 @@
                     </div>
                 </div>
             </div>
-            <hr>
+            <div class="post-preview">
+                <div id="reviewmodal" class="modal fade" >
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <!-- header -->
+                            <div class="modal-header">
+                                <!-- 닫기(x) 버튼 -->
+                                <button type="button" class="close" data-dismiss="modal">×</button>
+                                <!-- header title -->
+                                <h2 class="modal-title">Book Review</h2>
+                            </div>
+                            <!-- body -->
+                            <div class="modal-body">
+                                <div class="reviewContents">
+                                    <input id="reviewIsbn" type="hidden"/>
+                                    <h5 id="reviewTitle"></h5><hr>
+                                    <h5>Comments:</h5>
+                                    <textarea id="reviewT">
+                                    </textarea>
+                                </div>
+                            </div>
+                            <!-- Footer -->
+                            <div class="modal-footer">
+                                <button id="goReviewPage" class="btn" data-dismiss="modal">All Comments</button>
+                                <button id="reviewBtn" class="btn btn-warning" data-dismiss="modal">Register</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <!-- Pager -->
-            <ul class="pager">
-                <li class="next">
-                    <a href="#">Older Posts &rarr;</a>
-                </li>
-            </ul>
         </div>
     </div>
 </div>
 
-<hr>
 
 <!-- Footer -->
 <footer>

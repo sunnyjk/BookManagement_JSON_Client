@@ -4,6 +4,17 @@
  * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
  */
 
+.detailDiv {
+  width: 80%;
+  height: 130px;
+  margin: auto auto;
+  margin-top: 15px;
+}
+
+.detailDiv > h6 {
+  color: tomato;
+}
+
 #loginCancel {
   margin-right: 20px;
 }
@@ -198,6 +209,7 @@ hr.small {
   }
 }
 .intro-header {
+    height: 700px;
   background-color: #777777;
   background: no-repeat center center;
   background-attachment: scroll;
@@ -205,7 +217,7 @@ hr.small {
   -moz-background-size: cover;
   background-size: cover;
   -o-background-size: cover;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
 }
 .intro-header .site-heading,
 .intro-header .post-heading,
@@ -226,7 +238,6 @@ hr.small {
 }
 .intro-header .site-heading h1,
 .intro-header .page-heading h1 {
-  margin-top: 0;
   font-size: 50px;
 }
 .intro-header .site-heading .subheading,
@@ -475,3 +486,29 @@ body {
   -webkit-tap-highlight-color: #0085A1;
 }
 
+#keyword{
+  border:none;
+  border-color: #f0ad4e;
+  border-radius: 10px;
+  border-style: solid;
+}
+
+#space1 {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  height: 320px;
+  background-image: url("../img/home2.png");
+  background-size: cover;
+}
+
+textarea {
+  width: 100%;
+}
+
+.intro-header .row {
+  margin-top: 150px;
+}
+
+#bookImgDiv img {
+  height: 300px;
+}
