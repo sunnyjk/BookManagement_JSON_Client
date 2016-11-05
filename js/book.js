@@ -1,6 +1,5 @@
 var bookCount;
 var reviewCount;
-var imgFileId;
 var imgURL;
 
 function searchBook() {
@@ -27,67 +26,69 @@ function searchBook() {
                 bookCount = result.length;
                 if(bookCount != 0){
                     $("#bookFindResult").text(bookCount + " Books searched about \"" + $("#keyword").val() + "\"");
-                }
 
-                for(var i=0; i < result.length; i++){
-                    var tr = $("<tr></tr>").attr("data-isbn", result[i].isbn);
+                    for(var i=0; i < result.length; i++){
+                        var tr = $("<tr></tr>").attr("data-isbn", result[i].isbn);
 
-                    var imgUrl = $("<img>").attr("src", result[i].img);
-                    var imgTd = $("<td></td>").append(imgUrl);
+                        var imgUrl = $("<img>").attr("src", result[i].img);
+                        var imgTd = $("<td></td>").append(imgUrl);
 
-                    var titleTd = $("<td></td>").text(result[i].title);
+                        var titleTd = $("<td></td>").text(result[i].title);
 
-                    var detailTag = $("<a></a>").attr("class", "detail");
-                    var iTag3 = $("<i></i>").attr("class", "glyphicon glyphicon-zoom-in");
-                    detailTag.append(iTag3);
-                    detailTag.on("click", bookDetail);
-                    titleTd.append($("<br>"));
-                    titleTd.append(detailTag);
+                        var detailTag = $("<a></a>").attr("class", "detail");
+                        var iTag3 = $("<i></i>").attr("class", "glyphicon glyphicon-zoom-in");
+                        detailTag.append(iTag3);
+                        detailTag.on("click", bookDetail);
+                        titleTd.append($("<br>"));
+                        titleTd.append(detailTag);
 
-                    var authorTd = $("<td></td>").text(result[i].author);
-                    var priceTd = $("<td></td>").text(result[i].price);
-                    var deleteTag = $("<a></a>").attr("class", "remove");
-                    var iTag = $("<i></i>").attr("class", "glyphicon glyphicon-remove");
-                    deleteTag.append(iTag);
-                    deleteTag.on("click", bookDelete);
-                    var deleteBtnTd = $("<td></td>").append(deleteTag);
+                        var authorTd = $("<td></td>").text(result[i].author);
+                        var priceTd = $("<td></td>").text(result[i].price);
+                        var deleteTag = $("<a></a>").attr("class", "remove");
+                        var iTag = $("<i></i>").attr("class", "glyphicon glyphicon-remove");
+                        deleteTag.append(iTag);
+                        deleteTag.on("click", bookDelete);
+                        var deleteBtnTd = $("<td></td>").append(deleteTag);
 
-                    var updateTag = $("<a></a>").attr("class", "update");
-                    var iTag2 = $("<i></i>").attr("class", "glyphicon glyphicon-cog");
-                    updateTag.append(iTag2);
-                    updateTag.on("click", bookInfoUpdate);
-                    var updateBtnTd = $("<td></td>").append(updateTag);
+                        var updateTag = $("<a></a>").attr("class", "update");
+                        var iTag2 = $("<i></i>").attr("class", "glyphicon glyphicon-cog");
+                        updateTag.append(iTag2);
+                        updateTag.on("click", bookInfoUpdate);
+                        var updateBtnTd = $("<td></td>").append(updateTag);
 
-                    var reviewTag = $("<a></a>").attr("class", "review");
-                    reviewTag.attr("data-target", "#reviewmodal");
-                    reviewTag.attr("data-toggle", "modal");
-                    var iTag5 = $("<i></i>").attr("class", "glyphicon glyphicon-pencil");
-                    reviewTag.append(iTag5);
-                    reviewTag.on("click", bookReview);
-                    var reviewBtnTd = $("<td></td>").append(reviewTag);
+                        var reviewTag = $("<a></a>").attr("class", "review");
+                        reviewTag.attr("data-target", "#reviewmodal");
+                        reviewTag.attr("data-toggle", "modal");
+                        var iTag5 = $("<i></i>").attr("class", "glyphicon glyphicon-pencil");
+                        reviewTag.append(iTag5);
+                        reviewTag.on("click", bookReview);
+                        var reviewBtnTd = $("<td></td>").append(reviewTag);
 
-                    var shareTag = $("<a></a>").attr("class", "share");
-                    var iTag4 = $("<i></i>").attr("class", "glyphicon glyphicon-heart");
-                    shareTag.append(iTag4);
-                    shareTag.on("click", bookShare);
-                    var shareBtnTd = $("<td></td>").append(shareTag);
+                        var shareTag = $("<a></a>").attr("class", "share");
+                        var iTag4 = $("<i></i>").attr("class", "glyphicon glyphicon-heart");
+                        shareTag.append(iTag4);
+                        shareTag.on("click", bookShare);
+                        var shareBtnTd = $("<td></td>").append(shareTag);
 
-                    tr.append(imgTd);
-                    tr.append(titleTd);
-                    tr.append(authorTd);
-                    tr.append(priceTd);
-                    tr.append(deleteBtnTd);
-                    tr.append(updateBtnTd);
-                    tr.append(reviewBtnTd);
-                    tr.append(shareBtnTd);
+                        tr.append(imgTd);
+                        tr.append(titleTd);
+                        tr.append(authorTd);
+                        tr.append(priceTd);
+                        tr.append(deleteBtnTd);
+                        tr.append(updateBtnTd);
+                        tr.append(reviewBtnTd);
+                        tr.append(shareBtnTd);
 
-                    $("#bookTable").append(tr);
+                        $("#bookTable").append(tr);
+                    }
+                } else {
+                    $("#bookFindResult").text("No Results.");
                 }
 
 
             },
             error : function () {
-                alert("Error!!");
+                alert("Search Book AJAX ERROR.");
             }
         });
     }
@@ -133,7 +134,6 @@ function bookInfoUpdate() {
     var updateFinishBtn = $("<a></a>").attr("class", "updateFinish").append(finishBtn);
 
     var updateTd = $(this).parent().parent().find("td:nth-child(6)");
-    updateTd.append("<br><br>");
     updateTd.append(updateFinishBtn);
 
     $(".remove").css("visibility", "hidden");
@@ -153,7 +153,6 @@ function bookInfoUpdate() {
         var updateTitle = $(this).parent().parent().find("td:nth-child(2) > input").val();
         var updateAuthor = $(this).parent().parent().find("td:nth-child(3) > input").val();
         var updatePrice = $(this).parent().parent().find("td:nth-child(4) > input").val();
-        console.log(updateTitle + " " + updateAuthor + " " + updatePrice);
 
         var thisTd = $(this).parent().parent();
 
@@ -170,9 +169,7 @@ function bookInfoUpdate() {
             },
             success : function (result) {
 
-                console.log(result);
                 if(result != null){
-                    console.log(result.title);
                     console.log($(this).parent().parent().find("td:nth-child(2)").parent().html());
 
                     thisTd.find("td:nth-child(2)").text(result.title);
@@ -308,30 +305,35 @@ function searchReview() {
                 reviewCount = result.length;
                 if(reviewCount != 0){
                     $("#reviewFindResult").text(reviewCount + " Comments about " + result[0].title);
+
+                    for(var i=0; i < result.length; i++){
+                        var tr = $("<tr></tr>").attr("data-isbn", result[i].isbn);
+
+                        var titleTd = $("<td></td>").text(result[i].title);
+                        var comTd = $("<td></td>").text(result[i].comments);
+                        var idTd = $("<td></td>").text(result[i].id);
+                        var dateTd = $("<td></td>").text(result[i].date);
+
+                        var deleteTag = $("<a></a>").attr("class", "remove");
+                        var iTag = $("<i></i>").attr("class", "glyphicon glyphicon-remove");
+                        deleteTag.append(iTag);
+                        deleteTag.on("click", deleteReview);
+                        var deleteBtnTd = $("<td></td>").append(deleteTag);
+
+                        tr.append(titleTd);
+                        tr.append(comTd);
+                        tr.append(idTd);
+                        tr.append(dateTd);
+                        tr.append(deleteBtnTd);
+
+                        $("#reviewTable").append(tr);
+                    }
+
+                } else{
+                    $("#reviewFindResult").text("No Comments.");
                 }
 
-                for(var i=0; i < result.length; i++){
-                    var tr = $("<tr></tr>").attr("data-isbn", result[i].isbn);
 
-                    var titleTd = $("<td></td>").text(result[i].title);
-                    var comTd = $("<td></td>").text(result[i].comments);
-                    var idTd = $("<td></td>").text(result[i].id);
-                    var dateTd = $("<td></td>").text(result[i].date);
-
-                    var deleteTag = $("<a></a>").attr("class", "remove");
-                    var iTag = $("<i></i>").attr("class", "glyphicon glyphicon-remove");
-                    deleteTag.append(iTag);
-                    deleteTag.on("click", deleteReview);
-                    var deleteBtnTd = $("<td></td>").append(deleteTag);
-
-                    tr.append(titleTd);
-                    tr.append(comTd);
-                    tr.append(idTd);
-                    tr.append(dateTd);
-                    tr.append(deleteBtnTd);
-
-                    $("#reviewTable").append(tr);
-                }
 
             },
             error : function () {
@@ -658,31 +660,36 @@ $(document).ready(function () {
             success: function (result) {
 
                 reviewCount = result.length;
+
+                $("#reviewTable").empty();
+
                 if(reviewCount != 0){
                     $("#reviewFindResult").text(reviewCount + " Comments about " + result[0].title);
-                }
 
-                for(var i=0; i < result.length; i++){
-                    var tr = $("<tr></tr>").attr("data-isbn", result[i].isbn);
+                    for(var i=0; i < result.length; i++){
+                        var tr = $("<tr></tr>").attr("data-isbn", result[i].isbn);
 
-                    var titleTd = $("<td></td>").text(result[i].title);
-                    var comTd = $("<td></td>").text(result[i].comments);
-                    var idTd = $("<td></td>").text(result[i].id);
-                    var dateTd = $("<td></td>").text(result[i].date);
+                        var titleTd = $("<td></td>").text(result[i].title);
+                        var comTd = $("<td></td>").text(result[i].comments);
+                        var idTd = $("<td></td>").text(result[i].id);
+                        var dateTd = $("<td></td>").text(result[i].date);
 
-                    var deleteTag = $("<a></a>").attr("class", "remove");
-                    var iTag = $("<i></i>").attr("class", "glyphicon glyphicon-remove");
-                    deleteTag.append(iTag);
-                    deleteTag.on("click", deleteReview);
-                    var deleteBtnTd = $("<td></td>").append(deleteTag);
+                        var deleteTag = $("<a></a>").attr("class", "remove");
+                        var iTag = $("<i></i>").attr("class", "glyphicon glyphicon-remove");
+                        deleteTag.append(iTag);
+                        deleteTag.on("click", deleteReview);
+                        var deleteBtnTd = $("<td></td>").append(deleteTag);
 
-                    tr.append(titleTd);
-                    tr.append(comTd);
-                    tr.append(idTd);
-                    tr.append(dateTd);
-                    tr.append(deleteBtnTd);
+                        tr.append(titleTd);
+                        tr.append(comTd);
+                        tr.append(idTd);
+                        tr.append(dateTd);
+                        tr.append(deleteBtnTd);
 
-                    $("#reviewTable").append(tr);
+                        $("#reviewTable").append(tr);
+                    }
+                } else{
+                    $("#reviewFindResult").text("No Comments.");
                 }
 
             },
@@ -695,9 +702,6 @@ $(document).ready(function () {
 
 })
 
-function dStart() {
-    imgFileId = event.target.id;
-}
 
 function dDrop() {
 
@@ -717,25 +721,4 @@ function dDrop() {
     event.preventDefault();
 
 }
-
-/*
-
-var base64 ;
-
-function fileInfo(f){
-    var file = f.files; // files 를 사용하면 파일의 정보를 알 수 있음
-
-    var reader = new FileReader(); // FileReader 객체 사용
-    reader.onload = function(rst){ // 이미지를 선택후 로딩이 완료되면 실행될 부분
-        $('#img_box').html('<img src="' + rst.target.result + '">'); // append 메소드를 사용해서 이미지 추가
-        // 이미지는 base64 문자열로 추가
-        // 이 방법을 응용하면 선택한 이미지를 미리보기 할 수 있음
-
-        base64 = rst.target.result;
-
-
-    }
-    reader.readAsDataURL(file[0]); // 파일을 읽는다, 배열이기 때문에 0 으로 접근
-}
-*/
 
