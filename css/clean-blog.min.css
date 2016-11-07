@@ -17,3 +17,7 @@ i:hover {
 .searchListDiv {
     text-align: center;
 }
+
+.badge {
+    background-color: lightcoral;
+}

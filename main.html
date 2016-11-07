@@ -62,10 +62,13 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a id="goJoin" data-target="#joinmodal" data-toggle="modal">Join</a>
+                    <a id="loginUser" style="color: lightcoral"></a>
                 </li>
                 <li>
-                    <a id="goLogin" data-target="#loginmodal" data-toggle="modal">Login</a>
+                    <a id="goJoin" data-target="#joinmodal" data-toggle="modal" href="#">Join</a>
+                </li>
+                <li>
+                    <a id="goLogin" data-target="#loginmodal" data-toggle="modal" href="#">Login</a>
                 </li>
                 <li>
                     <a id="goAddBook" href="#">Add</a>
@@ -74,7 +77,7 @@
                     <a id="goReview" href="#reviewPageH2">Book Review</a>
                 </li>
                 <li>
-                    <a href="share.html">Share Books</a>
+                    <a href="share.html">Share Books  <span class="badge"></span></a>
                 </li>
             </ul>
         </div>
@@ -85,14 +88,14 @@
 
 <!-- Page Header -->
 <!-- Set your background image for this header on the line below. -->
-<header class="intro-header" style="background-image: url('img/beach.jpg')">
+<header class="intro-header" style="background-image: url('img/home2.jpg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="site-heading">
-                    <h1>Book System</h1>
+                    <h1>Search & Share</h1>
                     <hr class="small">
-                    <span class="subheading">A Clean Blog Theme by Start Bootstrap</span>
+                    <span class="subheading">A Clean Book System by Sunny</span>
                     <br>
                     <input id="keyword" type="text" class="form-control" placeholder="Search..."
                            onkeyup="searchBook()" style="width:500px; margin: auto auto;">
@@ -107,7 +110,7 @@
     <div class="row">
         <div class="myContent">
             <div class="post-preview">
-                <a href="post.html">
+                <a>
                     <h2 class="post-title">
                         Failure is not an option
                     </h2>
@@ -163,7 +166,7 @@
                             </tr>
                             <tr>
                                 <th>IMG URL</th>
-                                <td><input id="newImgurl" type="text"></td>
+                                <td></td>
                             </tr>
                             <tr>
                                 <td colspan="2">
@@ -177,8 +180,8 @@
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    <button id="addBookBtn" class="btn">ADD</button>
-                                    <button id="addBookCancelBtn" class="btn" style="margin-left: 20px;">CANCEL</button>
+                                    <button id="addBookCancelBtn" class="btn" style="margin-right: 20px;">CANCEL</button>
+                                    <button id="addBookBtn" class="btn btn-danger">ADD</button>
                                 </td>
                             </tr>
 
@@ -205,10 +208,10 @@
                             <th>Title</th>
                             <th>Author</th>
                             <th><a href="#" onclick="mySort()">Price</a></th>
-                            <th>Delete</th>
-                            <th>Update</th>
+                            <th>Detail</th>
                             <th>Review</th>
-                            <th>Share</th>
+                            <th>Update</th>
+                            <th>Delete</th>
                         </tr>
                         </thead>
                         <tbody id="bookTable">
@@ -274,15 +277,20 @@
                                 <button type="button" class="close" data-dismiss="modal">×</button>
                                 <!-- header title -->
                                 <h2 class="modal-title">Join Page</h2>
+                                <h5 style="color: #c9302c">*는 필수 입력 항목입니다.</h5>
                             </div>
                             <!-- body -->
                             <div class="modal-body">
                                 <div class="joinFormDiv">
-                                    <h5>USER ID</h5>
-                                    <input id="joinId" type="text" /><br>
-                                    <h5>USER PASSWORD</h5>
+                                    <h5 style="color: #c9302c">ID*</h5>
+                                    <input id="joinId" type="text" />
+                                    <button id="idCheckBtn" type="button" class="btn btn-default" aria-label="Left Align">
+                                        <i class="glyphicon glyphicon-ok" aria-hidden="true"></i>
+                                    </button>
+                                    <br>
+                                    <h5 style="color: #c9302c">USER PASSWORD*</h5>
                                     <input id="joinPw" type="password" /><br>
-                                    <h5>USER PASSWORD CHECK</h5>
+                                    <h5 style="color: #c9302c">USER PASSWORD CHECK*</h5>
                                     <input id="joinPw2" type="password" /><br>
                                     <h5>USER NAME</h5>
                                     <input id="joinName" type="text" />
@@ -290,7 +298,7 @@
                             </div>
                             <!-- Footer -->
                             <div class="modal-footer">
-                                <button id="dbJoinBtn" class="btn btn-warning" data-dismiss="modal">Join</button>
+                                <button id="dbJoinBtn" class="btn btn-danger" data-dismiss="modal">Join</button>
                             </div>
                         </div>
                     </div>
@@ -319,7 +327,7 @@
                             <!-- Footer -->
                             <div class="modal-footer">
                                 <button id="loginCancel" class="btn" data-dismiss="modal">Cancel</button>
-                                <button id="loginBtn" class="btn btn-warning" data-dismiss="modal">Login</button>
+                                <button id="loginBtn" class="btn btn-danger" data-dismiss="modal">Login</button>
                             </div>
                         </div>
                     </div>
@@ -349,7 +357,7 @@
                             <!-- Footer -->
                             <div class="modal-footer">
                                 <button id="goReviewPage" class="btn" data-dismiss="modal">All Comments</button>
-                                <button id="reviewBtn" class="btn btn-warning" data-dismiss="modal">Register</button>
+                                <button id="reviewBtn" class="btn btn-danger" data-dismiss="modal">Register</button>
                             </div>
                         </div>
                     </div>

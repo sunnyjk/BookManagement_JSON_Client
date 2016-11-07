@@ -68,7 +68,7 @@ i {
   font-size: 20px;
 }
 
-i:hover {
+i:hover, button:hover {
   color: tomato;
   font-size: 25px;
 }
@@ -209,7 +209,7 @@ hr.small {
   }
 }
 .intro-header {
-    height: 700px;
+  height: 700px;
   background-color: #777777;
   background: no-repeat center center;
   background-attachment: scroll;
@@ -488,7 +488,7 @@ body {
 
 #keyword{
   border:none;
-  border-color: #f0ad4e;
+  border-color: #e4b9b9;
   border-radius: 10px;
   border-style: solid;
 }
@@ -506,9 +506,17 @@ textarea {
 }
 
 .intro-header .row {
-  margin-top: 150px;
+  margin-top: 120px;
 }
 
 #bookImgDiv img {
   height: 300px;
+}
+
+.badge {
+  background-color : lightcoral;
+}
+
+.modal {
+  background-color: transparent;
 }
