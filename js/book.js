@@ -710,6 +710,8 @@ $(document).ready(function () {
         $("html, body").animate({scrollTop: offset.top}, 400);
         $(".todayP").text("Searched on " + new Date().toLocaleString());
 
+        var userId = sessionStorage.id;
+
         $.ajax({
             url: "http://localhost:7070/book/showReviewByIsbn",
             type: "get",
@@ -739,7 +741,10 @@ $(document).ready(function () {
                         var iTag = $("<i></i>").attr("class", "glyphicon glyphicon-remove");
                         deleteTag.append(iTag);
                         deleteTag.on("click", deleteReview);
-                        var deleteBtnTd = $("<td></td>").append(deleteTag);
+                        var deleteBtnTd = $("<td></td>");
+                        if(userId == result[i].id){
+                            deleteBtnTd = $("<td></td>").append(deleteTag);
+                        }
 
                         tr.append(titleTd);
                         tr.append(comTd);
@@ -759,6 +764,20 @@ $(document).ready(function () {
             }
         });
 
+    });
+
+
+    $(window).scroll(function () {
+        if($(this).scrollTop() > 200){
+            $(".top").fadeIn();
+        } else{
+            $(".top").fadeOut();
+        }
+    });
+
+    $(".top").click(function () {
+        $("html, body").animate({scrollTop: 0}, 400);
+        return false;
     });
 
 })

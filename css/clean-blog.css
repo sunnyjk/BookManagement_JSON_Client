@@ -453,8 +453,8 @@ form .row:first-child .floating-label-form-group {
 .pager li > a:hover,
 .pager li > a:focus {
   color: white;
-  background-color: #0085A1;
-  border: 1px solid #0085A1;
+  background-color: lightcoral;
+  border: 1px solid lightcoral;
 }
 .pager .disabled > a,
 .pager .disabled > a:hover,
@@ -517,6 +517,9 @@ textarea {
   background-color : lightcoral;
 }
 
-.modal {
-  background-color: transparent;
+a.top {
+  position: fixed;
+  right: 10%;
+  bottom: 10%;
+  display: none;
 }
